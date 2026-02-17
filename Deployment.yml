@@ -20,22 +20,22 @@ spec:
         envfrom:
         - configMapRef:
             name: bloodapp-config
-            resources:
-              limits:
-                memory: "256Mi"
-                cpu: "500m"
-              requests:
-                memory: "128Mi"
-                cpu: "100m"
-                livenessProbe:
-                  httpGet: 
-                  path: /
-                  port: 80
-                  initialDelaySeconds: 10
-                  periodSeconds: 5
-                readinessProbe:
-                  httpGet:
-                  path: /
-                  port: 80
-                  initialDelaySeconds: 10
-                  periodSeconds: 5
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet: 
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5

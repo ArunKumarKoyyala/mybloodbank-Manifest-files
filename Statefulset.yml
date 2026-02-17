@@ -14,20 +14,26 @@ spec:
         app: bloodapp-db
     spec:
       containers:
-      - name: bloodapp-db
-        image: arunkumarkoyyala/bloodbank:dbimage
-        ports:
-        - containerPort: 3306
-          valueFrom:
-            configMapKeyRef:
-              name: bloodapp-config 
-            secretKeyRef:
-              name: bloodapp-secrets
-      VolumeClaimTemplates:
-      - metadata:
-          name: bloodapp-db-pvc
-        spec:
-          accessModes: ["ReadWriteOnce"]
+        - name: bloodapp-db
+          image: arunkumarkoyyala/bloodbank:dbimage
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapKeyRef:
+                name: bloodapp-config 
+            - secretKeyRef:
+                  name: bloodapp-secrets
           resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
             requests:
-              storage: 1Gi
+              memory: "256Mi"
+              cpu: "256m"
+          volumeMounts:
+            - name: bloodapp-db-storage
+              mountPath: /usr/share/nginx/html/
+      volumes:
+        - name: bloodapp-db-storage
+          persistentVolumeClaim:
+            claimName: bloodapp-db-pvc
