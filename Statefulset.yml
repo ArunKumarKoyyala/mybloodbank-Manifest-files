@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bloodapp-db
+spec:
+  serviceName: "bloodapp-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bloodapp-db
+  template:
+    metadata:
+      labels:
+        app: bloodapp-db
+    spec:
+      containers:
+      - name: bloodapp-db
+        image: arunkumarkoyyala/bloodbank:dbimage
+        ports:
+        - containerPort: 3306
+          valueFrom:
+            configMapKeyRef:
+              name: bloodapp-config 
+            secretKeyRef:
+              name: bloodapp-secrets
+      VolumeClaimTemplates:
+      - metadata:
+          name: bloodapp-db-pvc
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
