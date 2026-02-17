@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: bloodapp-db
 spec:
-  serviceName: "bloodapp-db"
+  serviceName: bloodapp-db
   replicas: 1
   selector:
     matchLabels:
@@ -19,21 +19,26 @@ spec:
           ports:
             - containerPort: 3306
           envFrom:
-            - configMapKeyRef:
-                name: bloodapp-config 
-            - secretKeyRef:
-                  name: bloodapp-secrets
+            - configMapRef:
+                name: bloodapp-config
+            - secretRef:
+                name: bloodapp-secrets
           resources:
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
             requests:
               memory: "256Mi"
               cpu: "256m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           volumeMounts:
             - name: bloodapp-db-storage
-              mountPath: /usr/share/nginx/html/
-      volumes:
-        - name: bloodapp-db-storage
-          persistentVolumeClaim:
-            claimName: bloodapp-db-pvc
+              mountPath: /var/lib/mysql
+
+  volumeClaimTemplates:
+    - metadata:
+        name: bloodapp-db-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
