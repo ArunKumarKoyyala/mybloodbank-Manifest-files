@@ -17,7 +17,7 @@ spec:
         image: arunkumarkoyyala/bloodbank:appimage
         ports:
         - containerPort: 80
-        envfrom:
+        envFrom:
         - configMapRef:
             name: bloodapp-config
         resources:
@@ -38,4 +38,5 @@ spec:
             path: /
             port: 80
           initialDelaySeconds: 10
+
           periodSeconds: 5
